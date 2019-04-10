@@ -1,0 +1,12 @@
+# Powerlevel9k Fonts and load.
+POWERLEVEL9K_MODE='nerdfont-complete'
+source  ~/repos/powerlevel9k/powerlevel9k.zsh-theme
+
+# Powerlevel 9k prompt settings.
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(ssh os_icon disk_usage dir vcs newline status)
+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(root_indicator background_jobs history date time command_execution_time)
+POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
+
+# Alias to use colorls as default ls.
+alias ls='colorls'
+alias ll='colorls -lah --group-directories-first'
