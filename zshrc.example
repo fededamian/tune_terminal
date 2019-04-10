@@ -1,3 +1,8 @@
+# History parameters.
+export HISTFILE="${HOME}/.zsh_history"
+export SAVEHIST=10000000
+export HISTSIZE=10000000
+
 # Powerlevel9k Fonts and load.
 POWERLEVEL9K_MODE='nerdfont-complete'
 source  ~/repos/powerlevel9k/powerlevel9k.zsh-theme
