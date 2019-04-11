@@ -2,7 +2,8 @@
 
 # Global Variables.
 readonly REPOS_FOLDER="$HOME/public-repos"
-readonly NEEDED_COMMANDS="brew git"
+readonly NEEDED_COMMANDS="brew git realpath"
+readonly PROJECT_FOLDER="$(dirname $(realpath $0))"
 
 check_commands()
 {
@@ -101,7 +102,7 @@ install_colorls()
   mkdir -p $HOME/.config/colorls
 
   # Configure color scheme.
-  cp ./dark_colors.yaml $HOME/.config/colorls/dark_colors.yaml
+  cp "$PROJECT_FOLDER/dark_colors.yaml" "$HOME/.config/colorls/dark_colors.yaml"
 }
 
 configure_zsh()
@@ -137,15 +138,18 @@ configure_zsh()
   if [[ "$OPT_INSTALL_ZSHRC" == "yes" ]]; then
     
     # If there was a .zshrc file, it will be backed up.
-    if [[ -f "$HOME/.zshrc" ]]; then
+   # if [[ -f "$HOME/.zshrc" ]]; then
 
       # Move current .zshrc file to a backup file.
-      mv "$HOME/.zshrc" "$HOME/.zshrc.bak" 
+      #mv "$HOME/.zshrc" "$HOME/.zshrc.bak" 
 
-    fi
+    #fi
 
     # Copy the .zshrc file of the repo to the User´s Home directory.
-    cp ./zshrc.example $HOME/.zshrc
+    cp "$PROJECT_FOLDER/zshrc.example" "$HOME/.zshrc"
+
+    # Replace public repos folder.
+    sed -i '.bak' 's#^export REPOS_FOLDER=.*#export REPOS_FOLDER='"$REPOS_FOLDER"'#g' "$HOME/.zshrc"
 
   else  
   
