@@ -8,7 +8,7 @@ POWERLEVEL9K_MODE='nerdfont-complete'
 source  ~/repos/powerlevel9k/powerlevel9k.zsh-theme
 
 # Powerlevel 9k prompt settings.
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(ssh root_indicator os_icon time dir vcs aws command_execution_time newline background_jobs status history)
+POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(ssh root_indicator os_icon time dir vcs command_execution_time newline background_jobs status history aws)
 POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=()
 POWERLEVEL9K_PROMPT_ADD_NEWLINE=true
 
@@ -27,5 +27,5 @@ POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND='black'
 POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND='yellow'
 
 # Alias to use colorls as default ls.
-alias ls='colorls'
+alias ls='colorls --group-directories-first'
 alias ll='colorls -lah --group-directories-first'
