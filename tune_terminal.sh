@@ -2,8 +2,48 @@
 
 # Global Variables.
 readonly REPOS_FOLDER="$HOME/public-repos"
-readonly NEEDED_COMMANDS="brew git realpath"
-readonly PROJECT_FOLDER="$(dirname $(realpath $0))"
+readonly NEEDED_COMMANDS="brew git"
+
+get_path()
+{
+  # Save working directory.
+  WORKDIR="$(pwd)"
+
+  # The target file is the first argument of this function.
+  TARGET_FILE=$1
+
+  # Change to the target file directory.
+  cd "$(dirname $TARGET_FILE)"
+
+  # Get target file basename.
+  TARGET_FILE="$(basename $TARGET_FILE)"
+
+  # Iterate down a (possible) chain of symlinks.
+  while [ -L "$TARGET_FILE" ]; do
+
+    # Repeat previous process until the file is not a symlink anymore.
+    TARGET_FILE="$(readlink $TARGET_FILE)"
+    cd "$(dirname $TARGET_FILE)"
+    TARGET_FILE="$(basename $TARGET_FILE)"
+
+  done
+
+  # Compute the canonicalized name by finding the physical path
+  # for the directory we're in and appending the target file.
+  PHYS_DIR="$(pwd -P)"
+
+  # Print the physical directory as output.
+  echo $PHYS_DIR
+
+  # Go back to working directory.
+  cd "$WORKDIR"
+}
+
+set_project_folder()
+{
+  # Use get_path to set the project folder variable.
+  export PROJECT_FOLDER="$(get_path $0)"
+}
 
 check_commands()
 {
@@ -12,24 +52,24 @@ check_commands()
 
   # Iterate through all of the needed commands provided in the global variable.
   for NEEDED_COMMAND in $NEEDED_COMMANDS; do
- 
+
     # Verify if command exists.
     if ! hash "$NEEDED_COMMAND" >/dev/null 2>&1; then
 
       # Inform user the command was not found and increase the counter of
       # missing commands.
       printf "Command not found in PATH: %s\n" "$NEEDED_COMMAND" >&2
-        
+
       # Increase counter.
       ((MISSING_COUNTER++))
-      
+
     fi
 
     done
 
     # If any of the commands is missing, the script finishes with an error code.
     if ((MISSING_COUNTER > 0)); then
-       
+
       # Error Message.
       printf "Minimum %d commands are missing in PATH, aborting\n" "$MISSING_COUNTER" >&2
 
@@ -56,7 +96,7 @@ set_zsh_as_default_shell()
 
   # If the default shell is not set to ZSH, change it.
   if [[ "$SHELL" != "/bin/zsh" ]]; then
-  
+
     # Change the default shell to ZSH.
     chsh -s /bin/zsh
 
@@ -77,7 +117,7 @@ install_colorls()
 
   # Attempt to get Ruby version.
   RUBY_VERSION="$(ruby --version)"
-  
+
   # If Ruby is not present, install it. Otherwise, update it.
   if [[ "$?" -ne 0 ]]; then
 
@@ -134,16 +174,8 @@ configure_zsh()
   read OPT_INSTALL_ZSHRC
   echo ""
 
-  # Only if the user answers 'yes', the file will be replaced. 
+  # Only if the user answers 'yes', the file will be replaced.
   if [[ "$OPT_INSTALL_ZSHRC" == "yes" ]]; then
-    
-    # If there was a .zshrc file, it will be backed up.
-   # if [[ -f "$HOME/.zshrc" ]]; then
-
-      # Move current .zshrc file to a backup file.
-      #mv "$HOME/.zshrc" "$HOME/.zshrc.bak" 
-
-    #fi
 
     # Copy the .zshrc file of the repo to the User´s Home directory.
     cp "$PROJECT_FOLDER/zshrc.example" "$HOME/.zshrc"
@@ -151,8 +183,8 @@ configure_zsh()
     # Replace public repos folder.
     sed -i '.bak' 's#^export REPOS_FOLDER=.*#export REPOS_FOLDER='"$REPOS_FOLDER"'#g' "$HOME/.zshrc"
 
-  else  
-  
+  else
+
     # Inform user the file was not copied and what to do if he changes his mind.
     echo "INFO: .zshrc file not copied. You can run this script again if you change your mind."
 
@@ -161,6 +193,8 @@ configure_zsh()
 
 main()
 {
+  set_project_folder
+
   check_commands
 
   install_zsh_and_plugins
