@@ -1,6 +1,8 @@
 # Tune Terminal
 Mac Terminal Customization.
 
+![](./example.png)
+
 # What this script does
 - Update Homebrew package list.
 - Creates a `$HOME/public-repos` folder in the system if it doesn't exist to store the repos of projects used by this one.

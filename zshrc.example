@@ -28,6 +28,6 @@ POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND='black'
 POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND='yellow'
 
 # Alias to use colorls as default ls.
-alias ls='colorls --group-directories-first'
+alias lc='colorls --group-directories-first'
 alias ll='colorls -lah --group-directories-first'
 alias le='colorls --tree --group-directories-first'
