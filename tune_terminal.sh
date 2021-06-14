@@ -107,9 +107,9 @@ install_fonts()
 {
   echo "[*] INFO: Installing hack nerd font."
 
-  brew tap caskroom/fonts
+  brew tap homebrew/cask-fonts
 
-  brew cask install font-hack-nerd-font
+  brew install --cask font-hack-nerd-font
 }
 
 install_colorls()
@@ -151,15 +151,15 @@ configure_zsh()
   mkdir -p "$REPOS_FOLDER"
 
   # If powerlevel9k repository is present, do a pull. Otherwise, a clone.
-  if [ -d "$REPOS_FOLDER/powerlevel9k" ]; then
+  if [ -d "$REPOS_FOLDER/powerlevel10k" ]; then
 
-    # Pull Powerlevel9k repo.
-    git -C $REPOS_FOLDER/powerlevel9k pull
+    # Pull Powerlevel10k repo.
+    git -C $REPOS_FOLDER/powerlevel10k pull
 
   else
 
-    # Clone Powerlevel9k repo.
-    git -C $REPOS_FOLDER clone https://github.com/bhilburn/powerlevel9k.git
+    # Clone Powerlevel10k repo.
+    git -C $REPOS_FOLDER clone https://github.com/romkatv/powerlevel10k.git
 
   fi
 
