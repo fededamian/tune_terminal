@@ -165,6 +165,10 @@ configure_zsh()
   # Only if the user answers 'yes', the file will be replaced.
   if [[ "$OPT_INSTALL_ZSHRC" == "yes" ]]; then
 
+    # Make Backups.
+    [ -f "$HOME/.zshrc" ] && cp "$HOME/.zshrc" "$HOME/.zshrc.bak"
+    [ -f "$HOME/.p10k.sh" ] && cp "$HOME/.p10k.sh" "$HOME/.p10k.sh.bak"
+
     # Copy the .zshrc file of the repo to the User´s Home directory.
     cp "$PROJECT_FOLDER/zshrc.example" "$HOME/.zshrc"
     cp "$PROJECT_FOLDER/p10k.example" "$HOME/.p10k.zsh"
