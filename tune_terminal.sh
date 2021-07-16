@@ -1,7 +1,6 @@
 #!/bin/bash
 
 # Global Variables.
-readonly REPOS_FOLDER="$HOME/public-repos"
 readonly NEEDED_COMMANDS="brew git"
 
 get_path()
@@ -79,15 +78,21 @@ check_commands()
     fi
 }
 
-install_zsh_and_plugins()
+install_oh_my_zsh_and_plugins()
 {
-  echo "[*] INFO: Installing ZSH and its plugins."
+  echo "[*] INFO: Installing Oh my Zsh and its plugins."
 
-  brew install zsh
+  # Oh my Zsh
+  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 
-  brew install zsh-syntax-highlighting
+  # Sintax Highlighting Plugin
+  git clone https://github.com/zsh-users/zsh-syntax-highlighting.git ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-syntax-highlighting
 
-  brew install zsh-autosuggestions
+  # Perdictor Plugin
+  git clone https://github.com/zsh-users/zsh-autosuggestions ${ZSH_CUSTOM:-~/.oh-my-zsh/custom}/plugins/zsh-autosuggestions
+
+  # Powerlevel10k
+  git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 }
 
 set_zsh_as_default_shell()
@@ -105,11 +110,10 @@ set_zsh_as_default_shell()
 
 install_fonts()
 {
-  echo "[*] INFO: Installing hack nerd font."
-
-  brew tap homebrew/cask-fonts
+  echo "[*] INFO: Installing Hack Nerd and Meslo LG fonts."
 
   brew install --cask font-hack-nerd-font
+  brew install --cask font-meslo-lg
 }
 
 install_colorls()
@@ -147,26 +151,10 @@ install_colorls()
 
 configure_zsh()
 {
-  # Make sure a directory for the repo exists.
-  mkdir -p "$REPOS_FOLDER"
-
-  # If powerlevel9k repository is present, do a pull. Otherwise, a clone.
-  if [ -d "$REPOS_FOLDER/powerlevel10k" ]; then
-
-    # Pull Powerlevel10k repo.
-    git -C $REPOS_FOLDER/powerlevel10k pull
-
-  else
-
-    # Clone Powerlevel10k repo.
-    git -C $REPOS_FOLDER clone https://github.com/romkatv/powerlevel10k.git
-
-  fi
-
-  # Inform the user that his .zshrc file will be overwritten and ask for
+  # Inform the user that his .zshrc and .p10k.zsh files will be overwritten and ask for
   # confirmation.
-  echo "WARNING: Do you want the .zshrc in your home directory to be replaced with"
-  echo "         the repo´s version? Previous version will be stored as .bak."
+  echo "WARNING: Do you want the .zshrc and .p10k.sh files in your home directory to"
+  echo "         be replaced with the repo´s version? Previous versions will be stored as .bak."
   echo "         (Only 'yes' will be accepted to approve)?"
 
   # Request user input.
@@ -179,9 +167,7 @@ configure_zsh()
 
     # Copy the .zshrc file of the repo to the User´s Home directory.
     cp "$PROJECT_FOLDER/zshrc.example" "$HOME/.zshrc"
-
-    # Replace public repos folder.
-    sed -i '.bak' 's#^export REPOS_FOLDER=.*#export REPOS_FOLDER='"$REPOS_FOLDER"'#g' "$HOME/.zshrc"
+    cp "$PROJECT_FOLDER/p10k.example" "$HOME/.p10k.zsh"
 
   else
 
@@ -197,7 +183,7 @@ main()
 
   check_commands
 
-  install_zsh_and_plugins
+  install_oh_my_zsh_and_plugins
 
   set_zsh_as_default_shell
 
