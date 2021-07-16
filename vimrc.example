@@ -1,0 +1,54 @@
+" Install Plug, vim package manager.
+let data_dir = has('nvim') ? stdpath('data') . '/site' : '~/.vim'
+if empty(glob(data_dir . '/autoload/plug.vim'))
+  silent execute '!curl -fLo '.data_dir.'/autoload/plug.vim --create-dirs  https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim'
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
+endif
+
+" Run Plug.
+call plug#begin('~/.vim/plugged')
+
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+Plug 'scrooloose/nerdtree'
+Plug 'tpope/vim-fugitive'
+
+call plug#end()
+
+" Set Airline Theme.
+let g:airline_theme='wombat'
+let g:airline_powerline_fonts = 1
+
+" Set Airline options.
+let g:airline#extensions#tabline#enabled = 1      " Show topbar with buffers.
+
+" Remove vim original statusline.
+set noshowmode    " Get rid of things like --INSERT--
+set noshowcmd     " Get rid of display of last command
+set shortmess+=F  " Get rid of the file name displayed in the command line bar
+
+" Configure NERDTree.
+let g:NERDTreeDirArrowExpandable = '▸'
+let g:NERDTreeDirArrowCollapsible = '▾'
+autocmd StdinReadPre * let s:std_in=1
+autocmd VimEnter * if argc() == 0 && !exists("s:std_in") | NERDTree | endif
+
+" Set Colors Theme.
+colorscheme hybrid
+"colorscheme onedark
+"colorscheme sublimemonokai
+
+" Editor settings.
+syntax on                              " Enable Syntax Highlighting.
+"set number                             " Enable line absolute numbers OR.
+:set number relativenumber             " Turn hybrid line numbers on
+:set nu rnu                            " Turn hybrid line numbers on
+highlight Normal ctermbg=None          " Color change.
+highlight LineNr ctermfg=DarkGrey      " Color change.
+set is hls                             " Configure incremental and search highligh.
+set expandtab                          " Use spaces when pressing TAB key.
+set tabstop=2                          " Set spaces for pressing TAB key to 2.
+set shiftwidth=2                       " Set spaces for indentations to 2.
+
+
+

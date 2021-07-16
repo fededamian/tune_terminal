@@ -151,9 +151,9 @@ install_colorls()
 
 configure_zsh()
 {
-  # Inform the user that his .zshrc and .p10k.zsh files will be overwritten and ask for
+  # Inform the user that his .zshrc, .vimrc and .p10k.zsh files will be overwritten and ask for
   # confirmation.
-  echo "WARNING: Do you want the .zshrc and .p10k.sh files in your home directory to"
+  echo "WARNING: Do you want the .zshrc, .vimrc and .p10k.sh files in your home directory to"
   echo "         be replaced with the repo´s version? Previous versions will be stored as .bak."
   echo "         (Only 'yes' will be accepted to approve)?"
 
@@ -167,10 +167,12 @@ configure_zsh()
 
     # Make Backups.
     [ -f "$HOME/.zshrc" ] && cp "$HOME/.zshrc" "$HOME/.zshrc.bak"
-    [ -f "$HOME/.p10k.sh" ] && cp "$HOME/.p10k.sh" "$HOME/.p10k.sh.bak"
+    [ -f "$HOME/.vimrc" ] && cp "$HOME/.vimrc" "$HOME/.vimrc.bak"
+    [ -f "$HOME/.p10k.zsh" ] && cp "$HOME/.p10k.zsh" "$HOME/.p10k.zsh.bak"
 
     # Copy the .zshrc file of the repo to the User´s Home directory.
     cp "$PROJECT_FOLDER/zshrc.example" "$HOME/.zshrc"
+    cp "$PROJECT_FOLDER/vimrc.example" "$HOME/.vimrc"
     cp "$PROJECT_FOLDER/p10k.example" "$HOME/.p10k.zsh"
 
   else
@@ -179,6 +181,34 @@ configure_zsh()
     echo "INFO: .zshrc file not copied. You can run this script again if you change your mind."
 
   fi
+}
+
+install_vim()
+{
+  # Update packages.
+  brew update
+
+  # Install both vim and macvim.
+  brew install vim && brew install macvim
+
+  # Configure macvim as the linked vim editor.
+  brew link --overwrite macvim
+
+  # Install fonts.
+  git clone https://github.com/powerline/fonts.git --depth=1
+  cd fonts
+  ./install.sh
+  cd ..
+  rm -rf fonts
+
+  # Install Hybrid Theme.
+  cp "$PROJECT_FOLDER/hybrid.vim" ~/.vim/colors/
+
+  # Copy .vimrc file.
+  cp "$PROJECT_FOLDER/vimrc.example" ~/.vimrc
+
+  # Install plugins.
+  vim +PlugInstall +qall
 }
 
 main()
@@ -194,6 +224,8 @@ main()
   install_fonts
 
   install_colorls
+
+  install_vim
 
   configure_zsh
 }
